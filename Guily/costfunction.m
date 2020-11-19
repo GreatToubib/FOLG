@@ -1,12 +1,10 @@
-function [cost] = costfunction(pred , true)
+function [laperte] = costfunction(pred , true)
   rep = pred - true;
-  cost = 0 ;
+  laperte = 0 ;
   for i = 1:20
-    
-    cost += rep(i)**2;
-    
+    laperte = laperte + rep(i)^2;
   end
   
-  cost = cost/20;
+  laperte = laperte/20;
   
-endfunction
+end
