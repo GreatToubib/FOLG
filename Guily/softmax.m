@@ -11,5 +11,6 @@ function [zs] = softmax(z)
   
   
   zs = zs./somme ; 
+  zs = zs';
   
 end
