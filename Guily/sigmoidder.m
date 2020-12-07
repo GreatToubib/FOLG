@@ -4,7 +4,7 @@ function [zd] = sigmoidder(z)
 
   for j = 1:size(z)
    
-    zd(j) = (1/(1+e^(-z(j)))) * (1- (1/(1+e^(-z(j)))) ) ;
+    zd(j) = (1/(1+exp(-z(j)))) * (1- (1/(1+exp(-z(j)))) ) ;
   
   end
   

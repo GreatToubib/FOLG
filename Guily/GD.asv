@@ -1,9 +1,9 @@
-function [W] = GD(W, Xts, y_encoded, lr, epoch_number, activation, abs_tol)
+function [W] = GD(W, Xts, y_encoded, lr, activation, abs_tol)
 
-for epoch = 1:epoch_number
+for epoch = 1:1
     epoch
     cost=0;
-    for i = 1:13960
+    for i = 1:10
         ypred = W * Xts (:,i) ; % ypred avant activation du test sample
 
         if activation =='sigmoid'
@@ -19,23 +19,20 @@ for epoch = 1:epoch_number
             %ader = ReLUder (ypred)
         %end
         
-        cost = cost + costfunction(a_ypred, y_encoded (i,:)); % test de la cost function sur le test sample
+        cost = cost + costfunction(a_ypred, y_encoded (i,:)) % test de la cost function sur le test sample
         
         
        
 
     end
-    if epoch == 1 
-        previous_cost = 10000;
-    end
-    previous_cost
     cost=cost/13960
-    
+    if epoc == 1 
+        previous_cost = 10000
     if previous_cost - cost  < abs_tol
         disp('breaking')
         break
     else
-        previous_cost = cost;
+        previous_cost = cost
         W = W - lr*ader;
     end
 end

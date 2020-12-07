@@ -1,0 +1,34 @@
+%wow le projet 
+clc;
+clear all;
+load('data_doc1.mat')
+
+test_sample=13000
+[m,p] = size(Xts);
+W = ones (20,m) * 0.001 ;
+% ypred = W * Xts (:,test_sample) ; % ypred avant activation du test sample
+ypred = W * Xts ; % ypred sur tout
+
+%a = softmax(a) 
+a_ypred = sigmoid(ypred);  % ypred avec activation sigmoid
+%a = ReLU (a)
+%sd = softmaxder(a) 
+sd = sigmoidder (ypred);
+%sr = ReLUder (a)
+
+
+y_encoded = (yts==1:20); % one hot encoding des labels
+true = y_encoded (test_sample,:) % visualisation du label du test sample
+
+cost = costfunction(a_ypred, y_encoded) % test de la cost function sur le test sample
+
+alpha = 0.001; % learning rate
+
+% dafuq is this? 
+%for i = 1:20 
+% a = W * Xts (:,i) ;
+%  a = sigmoid(a) ;
+%  sd = sigmoidder (a) ;
+%  cost = costfunction (a, true)
+  
+%end
