@@ -1,54 +1,49 @@
-function [W] = GD(W, Xts, y_encoded, lr, epoch_number, activation, abs_tol)
+function [W] = GD(W, Xts, y_encoded, lr, epoch_number, activation, abs_tol, rel_tol)
 
 for epoch = 1:epoch_number
     epoch
     cost=0;
-    for i = 1:13960
-        Xts_row = Xts(:,i);
-        ytrue = y_encoded (i,:);
-        ypred = W * Xts_row ; % ypred avant activation du test sample
-        size(ypred)
-        if activation =='sigmoid'
-            a_ypred = sigmoid(ypred);  % ypred avec activation sigmoid
-            ader = sigmoidder (ypred);
-        end
-        %if activation =='softmax'
-            %a_ypred = softmax(ypred) ;
-            %ader = softmaxder(ypred) ;
-        %end
-        %if activation =='relu'
-            %a_ypred = ReLU (ypred)
-            %ader = ReLUder (ypred)
-        %end
-        size(a_ypred)
-        
-        cost = cost + costfunction(a_ypred, ytrue); % test de la cost function sur le test sample
-        
-        part1 = a_ypred-ytrue;
-        size(part1)
-        part2 = ader;
-        size(part2)
-        part3=  (part1' .*  part2);
-        size(part3)
-        Xts_row=Xts_row';
-        size(Xts_row)
-        gd = Xts_row * ( 1/20 * part3)';
-        W = W - lr*gd;
-       
+   
+    ypred = W' * Xts ; % ypred avant activation du test sample
+    if activation == 'sigmoid'
+        a_ypred = sigmoidFunction(ypred);  % ypred avec activation sigmoid
+        % https://kawahara.ca/how-to-compute-the-derivative-of-a-sigmoid-function-fully-worked-example/
+        ader = sigmoidFunction(ypred) .* ( 1 - sigmoidFunction(ypred));
     end
+    %if activation =='softmax'
+        %a_ypred = softmax(ypred) ;
+        %ader = softmaxder(ypred) ;
+    %end
+    %if activation =='relu'
+        %a_ypred = ReLU (ypred)
+        %ader = ReLUder (ypred)
+    %end
+
+    cost = cost + costfunction(a_ypred, y_encoded'); % test de la cost function sur le test sample
+
+    part1 = a_ypred-y_encoded';
+    part2 = ader;
+    part3=  (part1 .*  part2);
+    gd = Xts * ( 1/20 * part3)'; 
+    
+    W = W - lr*gd;
+    
     if epoch == 1 
         previous_cost = 10000;
     end
-    previous_cost
-    cost=cost/13960
-    
-    if previous_cost - cost  < abs_tol
-        disp('breaking')
+
+    diff=previous_cost - cost
+    if diff  < abs_tol
+        disp('breaking abs')
+        break
+    elseif diff < previous_cost* rel_tol
+        disp('breaking rel')
         break
     else
         previous_cost = cost;
-        
+      
     end
+
 end
 end
 

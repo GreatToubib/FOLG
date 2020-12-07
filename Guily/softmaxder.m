@@ -1,6 +1,6 @@
 function [z] = softmaxder(zs)
 
-zd = zeros (1,20);
+zd = zeros(1,20);
  
 for i = 1:20
   for j = 1:20
@@ -14,6 +14,6 @@ for i = 1:20
   
   end
 end
-  #z = zd (:,1);
+  %z = zd (:,1);
   z = zd';
 end

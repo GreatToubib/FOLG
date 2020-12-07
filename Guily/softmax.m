@@ -4,8 +4,8 @@ function [zs] = softmax(z)
   somme = 0;
   for i = 1:size(z)
    
-  zs(i) = e**z(i);
-  somme += e**z(i)  ;
+  zs(i) = exp(z(i));
+  somme = somme + exp(z(i))  ;
   end
   
   
