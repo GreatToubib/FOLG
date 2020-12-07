@@ -4,7 +4,8 @@ for epoch = 1:epoch_number
     epoch
     cost=0;
     for i = 1:13960
-        Xts_row = Xts(:,i)
+        Xts_row = Xts(:,i);
+        ytrue = y_encoded (i,:);
         ypred = W * Xts_row ; % ypred avant activation du test sample
 
         if activation =='sigmoid'
@@ -20,16 +21,13 @@ for epoch = 1:epoch_number
             %ader = ReLUder (ypred)
         %end
         
-        cost = cost + costfunction(a_ypred, y_encoded (i,:)); % test de la cost function sur le test sample
-        subpart1 = W * Xts_row;
-        part1 = ypred-ytrue;
-
-        subpart2 = W * Xts_row;
-        part2 = softmaxder(ypred);
-
+        cost = cost + costfunction(a_ypred, ytrue); % test de la cost function sur le test sample
+        
+        part1 = a_ypred-ytrue;
+        part2 = ader;
         part3=  (part1' .*  part2);
         gd = Xts_row * ( 1/20 * part3)';
-        
+        W = W - lr*gd;
        
 
     end
@@ -44,7 +42,7 @@ for epoch = 1:epoch_number
         break
     else
         previous_cost = cost;
-        W = W - lr*ader;
+        
     end
 end
 end
