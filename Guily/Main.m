@@ -1,16 +1,16 @@
 %wow le projet 
-clear all
-load "data_doc1.mat"
+clear all;
+load('data_doc1.mat')
 [m,p] = size(Xts);
 W = ones (20,m) * 0.001 ; 
 a = W * Xts (:,1) ;
 
-#a = softmax(a) 
+%a = softmax(a) 
 a = sigmoid(a) 
-#a = ReLU (a)
-#sd = softmaxder(a) 
+%a = ReLU (a)
+%sd = softmaxder(a) 
 sd = sigmoidder (a) 
-#sr = ReLUder (a)
+%sr = ReLUder (a)
 
 
 y_encoded = (yts==1:20);
