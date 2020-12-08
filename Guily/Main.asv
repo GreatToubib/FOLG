@@ -1,51 +1,50 @@
 %wow le projet 
+
+%%% TODO
+% optimiser le biais aussi. 
+% adaptive learning rate 
+% avec les 
+%
+
 clc;
-clear all;
+%clear all;
 load('data_doc1.mat')
-
-test_sample=1;
+tic;
 [m,p] = size(Xts);
-W = ones (m,20) * 0.01 ;
-B= zeros(1,20);
-ypred = W' * Xts (:,test_sample) ; % ypred avant activation du test sample
-%ypred = W * Xts ; % ypred sur tout
+splitChoice='random';
+splitValue=0.8;
+initializationChoice = 'zeros'; % random, he, zeros, xavier or number
+activation='sigmoid'; % 'relu' ou 'softmax' 'sigmoid'
+lr=10^-2;
+abs_tol=10^-5;
+rel_tol=10^-5;
+epoch_number=1000;
+patience=5;
 
 
-% faudrait pas appliquer sigmoid a chaque output dans une boucle? ou en
-% matriciel du coup? en matriciel pour stochastic, si on les prend tous d
-% un coup.
-%a = softmax(a) 
-a_ypred = sigmoidFunction(ypred);  % ypred avec activation sigmoid
-%a = ReLU (a)
-%sd = softmaxder(a) 
-%sd = sigmoidder (ypred);
-ader = sigmoidFunction(ypred) .* ( 1 - sigmoidFunction(ypred));
-%sr = ReLUder (a)
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% initialization %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+W = initializationFunction(m,initializationChoice); 
+Winit=W; % store initial weights
+% a priori random le mieux
+% https://medium.com/@sakeshpusuluri123/activation-functions-and-weight-initialization-in-deep-learning-ebc326e62a5c
+%When we have a sigmoid activation function, it is better to use Xavier Glorot initialization of weights.
+% When we have ReLU activation function, it is better to use He-initialization of weights.
+B= zeros(1,20); % zeros c est tres bien, l initialisation des biais change rien askip
 y_encoded = (yts==1:20); % one hot encoding des labels
-ytrue = y_encoded (test_sample,:) % visualisation du label du test sample
-cost = costfunction(a_ypred, ytrue) % test de la cost function sur le test sample
 
 
-lr=0.01;
-activation='sigmoid';
-abs_tol=10^-5
-rel_tol=10^-5;% doit s ameliorer de 1 % ou on arrete
-epoch_number=200;
-%W_trained = GD(W, Xts, y_encoded, lr, epoch_number, activation, abs_tol, rel_tol);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% splitting data  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+[Xtrain,Ytrain, Xtest, Ytest] = createTrainingSet(Xts,yts, splitChoice, splitValue);
+ytrain_encoded = (Ytrain==1:20);
+ytest_encoded = (Ytest==1:20);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% back propagation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[W_trained, loss_history]= GD(W, Xtrain, ytrain_encoded, lr, epoch_number, activation, abs_tol, rel_tol,patience);
+
+training_time = toc
+%accuracy = validation( Xts, yts, W_trained );
+%accuracy = validation( Xtrain,Ytrain, W_trained );
+accuracy = validation( Xtest, Ytest, W_trained );
 
 
 
-
-
-% validation 
-count=0;
-for test_sample = 1:1
-    [m,p] = size(Xts);
-    ypred = W' * Xts (:,test_sample) ; 
-    a_ypred = sigmoidFunction(ypred);  % ypred avec activation sigmoid
-    [M,I] = max(a_ypred)
-    ytrue = yts(test_sample) % visualisation du label du test sample
-    if ytrue==
-end
