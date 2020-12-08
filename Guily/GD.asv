@@ -1,0 +1,58 @@
+function [W, B, loss_history] = GD(W, B, Xtrain, Ytrain, lr, epoch_number, activation, abs_tol, rel_tol, patience)
+patience_count=0;
+loss_history=zeros(epoch_number);
+[m,p] = size(Xtrain);
+for epoch = 1:epoch_number
+    epoch
+    % optimisation de W
+    ypred = W'* Xtrain + B; 
+    [a_ypred, ader] = activationFunction(ypred, activation);
+    loss = costfunction(a_ypred, Ytrain', 'MSE'); 
+    pred_error = a_ypred-Ytrain';
+    part3=  (pred_error .*  ader);
+    gdW = Xtrain * ( 2/p * part3)'; 
+    W = W - lr*gdW;
+    
+    % optimisation de B, a priori ca ameliore pas les resultats, l
+    ypred = W'* Xtrain + B; 
+    [a_ypred, ader] = activationFunction(ypred, activation);
+    loss = costfunction(a_ypred, Ytrain', 'MSE'); 
+    pred_error = a_ypred-Ytrain';
+    part3=  (pred_error .*  ader);
+    gdB = 2 * ( 1/p * part3)'; 
+    B = B - lr*gdB';
+    
+    
+    
+    loss = costfunction(a_ypred, Ytrain', 'MSE'); 
+    loss_history(epoch) = loss;
+
+    
+    if epoch == 1 
+        previous_loss = 10000;
+    end
+
+    diff = previous_loss - loss
+    if diff  < abs_tol
+        patience_count = patience_count+1;
+        if patience_count==5
+            disp('breaking abs')
+            break
+        end
+    elseif diff < previous_loss* rel_tol
+        patience_count = patience_count+1;
+        if patience_count==5
+            disp('breaking rel')
+            break
+        end
+    else
+        previous_loss = loss;
+      
+    end
+
+end
+
+end
+
+
+	
