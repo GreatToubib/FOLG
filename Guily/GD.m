@@ -1,10 +1,10 @@
-function [W, loss_history] = GD(W, Xts, y_encoded, lr, epoch_number, activation, abs_tol, rel_tol, patience)
+function [W, B, loss_history] = GD(W,B, Xts, y_encoded, lr, epoch_number, activation, abs_tol, rel_tol, patience)
 patience_count=0;
 loss_history=zeros(epoch_number);
 for epoch = 1:epoch_number
     epoch
    
-    ypred = W' * Xts ; % ypred avant activation du test sample
+    ypred = W' * Xts + B; % ypred avant activation du test sample
     [a_ypred, ader] = activationFunction(ypred, activation);
     
     loss = costfunction(a_ypred, y_encoded', 'MSE'); % test de la cost function sur le test sample

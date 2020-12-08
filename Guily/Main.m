@@ -18,7 +18,7 @@ activation='sigmoid'; % 'relu' ou 'softmax' 'sigmoid'
 lr=10^-2;
 abs_tol=10^-5;
 rel_tol=10^-5;
-epoch_number=1000;
+epoch_number=50;
 patience=5;
 
 
@@ -29,7 +29,7 @@ Winit=W; % store initial weights
 % https://medium.com/@sakeshpusuluri123/activation-functions-and-weight-initialization-in-deep-learning-ebc326e62a5c
 %When we have a sigmoid activation function, it is better to use Xavier Glorot initialization of weights.
 % When we have ReLU activation function, it is better to use He-initialization of weights.
-B= zeros(1,20); % zeros c est tres bien, l initialisation des biais change rien askip
+B= zeros(20,p); % zeros c est tres bien, l initialisation des biais change rien askip
 y_encoded = (yts==1:20); % one hot encoding des labels
 
 
@@ -39,7 +39,7 @@ y_encoded = (yts==1:20); % one hot encoding des labels
 ytrain_encoded = (Ytrain==1:20);
 ytest_encoded = (Ytest==1:20);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% back propagation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[W_trained, loss_history]= GD(W, Xtrain, ytrain_encoded, lr, epoch_number, activation, abs_tol, rel_tol,patience);
+[W_trained, B_trained, loss_history]= GD(W, B, Xtrain, ytrain_encoded, lr, epoch_number, activation, abs_tol, rel_tol,patience);
 
 training_time = toc
 %accuracy = validation( Xts, yts, W_trained );
