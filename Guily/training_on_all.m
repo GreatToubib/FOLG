@@ -1,10 +1,10 @@
-function [W, B, train_loss_history, val_loss_history] = training(W, B, Xtrain, Ytrain, Xtest, Ytest, epoch_number, activation, abs_tol, rel_tol, patience, batch_size)
+function [W, B, train_loss_history] = training_on_all(W, B, Xtrain, Ytrain, epoch_number, activation, abs_tol, rel_tol, patience, batch_size)
 patience_count=0;
 
 global ptrain;
 batch_number = floor(ptrain/batch_size)
 lrW = 1;
-lrB = 1;
+lrB = 1; 
 for epoch = 1: epoch_number
     epoch
     
@@ -18,9 +18,6 @@ for epoch = 1: epoch_number
     % training loss 
     loss = costfunction(Ytrain', 'MSE', W, Xtrain, B, activation); 
     train_loss_history(epoch) = loss;
-    % validation loss 
-    loss = costfunction(Ytest', 'MSE', W, Xtest, B, activation)
-    val_loss_history(epoch) = loss;
 
     if epoch == 1 
         previous_loss = 10000;
