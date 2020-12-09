@@ -2,16 +2,21 @@ function [W, B, train_loss_history, val_loss_history] = training(W, B, Xtrain, Y
 patience_count=0;
 
 global ptrain;
-batch_number= floor(ptrain/batch_size)
+batch_number = floor(ptrain/batch_size)
 
 for epoch = 1: epoch_number
     epoch
-    
+    if epoch == 1000
+        lr=lr/2;
+    end
+    if epoch == 1500
+        lr=lr/2;
+    end
     for batch = 1: batch_number
         Xbatch = Xtrain(:,(batch-1)*batch_size+1:batch*batch_size); 
         Ybatch = Ytrain((batch-1)*batch_size+1:batch*batch_size,:);
         %gradient descent 
-        [ W ] = gdFunction(Xbatch ,Ybatch,  activation, W, B , lr, batch_size);
+        [ W, B ] = gdFunction(Xbatch ,Ybatch,  activation, W, B , lr, batch_size);
     end 
     
     % training loss 

@@ -13,15 +13,15 @@ tic;
 global mtrain;
 global ptrain;
 [m,p] = size(Xts);
-batch_size= 64; % 11168
+batch_size= 512; % 11168
 splitChoice='random';
 splitValue=0.8;
 initializationChoice = 'zeros'; % random, he, zeros, xavier or number
 activation='sigmoid'; % 'relu' ou 'softmax' 'sigmoid'
 lr=10^-1;
-abs_tol=10^-5;
-rel_tol=10^-5;
-epoch_number=50;
+abs_tol=10^-6;
+rel_tol=10^-6;
+epoch_number=2000;
 patience=5;
 
 
