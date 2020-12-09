@@ -7,13 +7,13 @@
 %
 
 clc;
-%clear all;
+clear all;
 load('data_doc1.mat')
 tic;
 global mtrain;
 global ptrain;
 [m,p] = size(Xts);
-batch_size= 
+batch_size= 11168;
 splitChoice='random';
 splitValue=0.8;
 initializationChoice = 'zeros'; % random, he, zeros, xavier or number
@@ -21,7 +21,7 @@ activation='sigmoid'; % 'relu' ou 'softmax' 'sigmoid'
 lr=10^-2;
 abs_tol=10^-5;
 rel_tol=10^-5;
-epoch_number=50;
+epoch_number=1000;
 patience=5;
 
 
@@ -48,7 +48,7 @@ ytest_encoded = (Ytest==1:20);
 training_time = toc
 %accuracy = validation( Xts, yts, W_trained );
 %accuracy = validation( Xtrain,Ytrain, W_trained );
-accuracy = validation( Xtest, Ytest, W_trained );
+accuracy = validation( Xtest, Ytest, W_trained, B_trained );
 
-
+plot(loss_history);
 
