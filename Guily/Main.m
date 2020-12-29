@@ -16,12 +16,12 @@ global ptrain;
 batch_size= 256; % 11168 64 512 32
 splitChoice='random';
 splitValue=0.8;
-initializationChoice = 'he'; % random, he, zeros, xavier or number
+initializationChoice = 'zeros'; % random, he, zeros, xavier or number
 activation='sigmoid'; % 'relu' ou 'softmax' 'sigmoid'
 abs_tol=10^-7;
 rel_tol=10^-6;
 epoch_number=10;
-patience=2;
+patience=5;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% initialization %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
