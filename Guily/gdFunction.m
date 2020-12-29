@@ -3,8 +3,8 @@ function [ W, B, lrW, lrB] = gdFunction( Xbatch, Ybatch, Xtrain, Ytrain, activat
 %   Detailed explanation goes here
 % optimisation de W
     % optimisation de W
+    
     lrW = 1.5* lrW;
-    %lrB = 1.5* lrB;
     global ptrain;
     bicMac = repmat(B, 1, batch_size);
     ypred = (W'* Xbatch) + bicMac; 
@@ -25,15 +25,23 @@ function [ W, B, lrW, lrB] = gdFunction( Xbatch, Ybatch, Xtrain, Ytrain, activat
     
     
     % optimisation de B, a priori ca ameliore pas les resultats, l accuracy
-    % sur le test est même moins bonne, de 0.64 decend a 0.62, et c est
-    % entre 1.5 et 2 fois plus long. 
+    lrB = 1.5* lrB;
     ypred = (W'* Xbatch) + bicMac;
     [a_ypred, ader] = activationFunction(ypred, activation);
     pred_error = a_ypred-Ybatch';
     part3=  (pred_error .*  ader);
     gdB = 2 * ( 1/ptrain * part3)'; 
-    %gdB=mean(gdB,1);
+    previous_bicMac = bicMac;
+    previous_B= previous_bicMac(:,1);
     bicMac = bicMac - lrB*gdB'; % update B
+    new_loss = costfunction( Ytrain', 'MSE', W, Xtrain, B, activation);
+    old_loss = costfunction( Ytrain', 'MSE', W, Xtrain, previous_B, activation);
+    while new_loss > old_loss
+    lrB = lrB/2;
+    bicMac = previous_bicMac - lrB*gdB'; % update B
     B=bicMac(:,1);
+    new_loss = costfunction( Ytrain', 'MSE', W, Xtrain, B, activation);
+    end 
+    
 end
 
