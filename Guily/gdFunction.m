@@ -11,7 +11,7 @@ function [ W, B, lrW, lrB] = gdFunction( Xbatch, Ybatch, Xtrain, Ytrain, activat
     [a_ypred, ader] = activationFunction(ypred, activation);
     pred_error = a_ypred-Ybatch';
     part3=  (pred_error .*  ader);
-    gdW = Xbatch * 1/20 * ( 1/ptrain * part3)'; 
+    gdW = Xbatch * 1/20 * ( 1/batch_size * part3)'; 
     previous_W = W;
     W = previous_W - lrW*gdW; % update W
     new_loss = costfunction( Ytrain', 'MSE', W, Xtrain, B, activation);
@@ -29,17 +29,19 @@ function [ W, B, lrW, lrB] = gdFunction( Xbatch, Ybatch, Xtrain, Ytrain, activat
     [a_ypred, ader] = activationFunction(ypred, activation);
     pred_error = a_ypred-Ybatch';
     part3=  (pred_error .*  ader);
-    gdB = 1/20 * ( 1/ptrain * part3)';
+    gdB = 1/20 * ( 1/batch_size * part3)';
     previous_bicMac = bicMac;
     previous_B= previous_bicMac(:,1);
     bicMac = bicMac - lrB*gdB'; % update B
-    %B=bicMac(:,1);
+    B=bicMac(:,1);
+    %previous_B(1,1)
+    %B(1,1)
     new_loss = costfunction( Ytrain', 'MSE', W, Xtrain, B, activation);
     old_loss = costfunction( Ytrain', 'MSE', W, Xtrain, previous_B, activation);
     while new_loss > old_loss
-    lrB = lrB/2;
+    lrB = lrB/2
     bicMac = previous_bicMac - lrB*gdB'; % update B
-    %B=bicMac(:,1);
+    B=bicMac(:,1);
     new_loss = costfunction( Ytrain', 'MSE', W, Xtrain, B, activation);
     end 
     

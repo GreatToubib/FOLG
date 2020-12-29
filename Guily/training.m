@@ -1,10 +1,10 @@
-function [best_W, B, train_loss_history, val_loss_history] = training(W, B, Xtrain, Ytrain, Xtest, Ytest, epoch_number, activation, abs_tol, rel_tol, patience, batch_size)
+function [best_W, best_B, train_loss_history, val_loss_history] = training(W, B, Xtrain, Ytrain, Xtest, Ytest, epoch_number, activation, abs_tol, rel_tol, patience, batch_size)
 patience_count=0;
 
 global ptrain;
 batch_number = floor(ptrain/batch_size)
 lrW = 1;
-lrB = 1;
+lrB = 10^4;
 for epoch = 1: epoch_number
     epoch
     for batch = 1: batch_number
@@ -50,6 +50,7 @@ for epoch = 1: epoch_number
     if patience_count == 0 
         previous_loss = loss;
         best_W = W;
+        best_B = B;
     end
 
 end
