@@ -10,18 +10,25 @@ clc;
 %clear all;
 load('data_doc1.mat')
 tic;
+global loss_batch_history;
+loss_batch_history=[];
 global mtrain;
 global ptrain;
+global accelChoice;
+global k;
+
 [m,p] = size(Xts);
 batch_size= 256; % 11168 64 512 32
 splitChoice='random';
 splitValue=0.8;
+accelChoice='normal'; %  normal  heavyball,  nesterov
+accel=accelChoice;
 initializationChoice = 'zeros'; % random, he, zeros, xavier or number
 activation='sigmoid'; % 'relu' ou 'softmax' 'sigmoid'
-abs_tol=10^-7;
+abs_tol=10^-8;
 rel_tol=10^-6;
-epoch_number=10;
-patience=5;
+epoch_number=100;
+patience=3;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% initialization %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
