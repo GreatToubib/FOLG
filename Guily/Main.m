@@ -13,7 +13,7 @@ tic;
 global mtrain;
 global ptrain;
 [m,p] = size(Xts);
-batch_size= 256; % 11168 64 512 32
+batch_size= 64; % 11168 64 512 32
 splitChoice='random';
 splitValue=0.8;
 initializationChoice = 'zeros'; % random, he, zeros, xavier or number

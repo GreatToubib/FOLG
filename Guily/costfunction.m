@@ -1,8 +1,7 @@
 function [loss] = costfunction( Ytrain, costChoice, W, Xtrain, B, activation)
-
+global ptrain;
 tmp = (W'* Xtrain);
-%size(tmp)
-%size(B)
+repmat (B,1, size(Xtrain) );
 ypred = tmp + B; 
 pred = activationFunction(ypred, activation);
     
