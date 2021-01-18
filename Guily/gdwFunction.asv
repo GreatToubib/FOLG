@@ -1,0 +1,12 @@
+function [ gdW, gdB ] = gdFunction( Xtrain, Ytrain, activation, W, B )
+%UNTITLED Summary of this function goes here
+%   Detailed explanation goes here
+% optimisation de W
+    ypred = W'* Xtrain + B; 
+    [a_ypred, ader] = activationFunction(ypred, activation);
+    pred_error = a_ypred-Ytrain';
+    part3=  (pred_error .*  ader);
+    gdW = Xtrain * ( 2/p * part3)'; 
+
+end
+
