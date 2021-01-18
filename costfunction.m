@@ -1,8 +1,9 @@
 function [loss] = costfunction( Ytrain, costChoice, W, Xtrain, B, activation)
+% Fonction de cout, calcule la loss entre la prediction et la ground_truth
+% de base, on utilise MSE, pas d'autre implémentée pour le moment
 
 tmp = (W'* Xtrain);
-%size(tmp)
-%size(B)
+
 ypred = tmp + B; 
 pred = activationFunction(ypred, activation);
     

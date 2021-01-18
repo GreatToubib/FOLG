@@ -1,7 +1,7 @@
 function [accuracy ] = validation( Xtest, Ytest, W_trained, B_trained )
 %UNTITLED6 Summary of this function goes here
-%   Detailed explanation goes here
-    % validation 
+%   Validation d'un modele(W_trained,B_trained) sur le validation set, 
+%   OUTPUT: accuracy. 
 count=0;
 [m,p] = size(Xtest);
 for test_sample = 1:p

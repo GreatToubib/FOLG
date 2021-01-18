@@ -1,6 +1,5 @@
 function [ ] = createFile( Xvr, W_trained, B_trained )
-%UNTITLED3 Summary of this function goes here
-%   Detailed explanation goes here
+% create submissions File for Kaggle
 
 [m,p] = size(Xvr);
 data = zeros(p,2);

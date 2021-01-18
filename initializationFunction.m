@@ -5,16 +5,16 @@ function W = initializationFunction(m, choice)
         W = zeros (m,20);
     end
     
-    if isequal(choice,'random') % random avec 0.05 minimum 
+    if isequal(choice,'random') % random entre -0.5 et 0.5
         W = rand(m,20) ;
-        W = 0.10+W*0.80;
+        W = -1+W*2;
     end
-    if isequal(choice,'xavier') % (uniform), le plus utilise avec sigmoid askip
-        x = sqrt(6/(1+20)); % 1 inout et 20 output par neurone
+    if isequal(choice,'xavier') %  le plus utilise avec sigmoid askip
+        x = sqrt(6/(1+20)); % 1 input et 20 output par neurone
         W = (rand(m,20) * 2 - 1) * x ;
     end
-    if isequal(choice,'he') % he uniform, le + utilise avec relu askip
-        x = sqrt(6/1); % 1 inout
+    if isequal(choice,'he') % he uniform, le + utilise avec relu askip, mais relu foire
+        x = sqrt(6/1); % 1 input
         W = (rand(m,20) * 2 - 1) * x ;
     end
     if isnumeric(choice)
