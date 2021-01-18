@@ -1,9 +1,8 @@
 %wow le projet 
 
 %%% TODO
-% optimiser le biais aussi. 
-% adaptive learning rate 
-% avec les conditions et tout là. voir slides
+% Wolfe
+% experiences
 %https://towardsdatascience.com/calculating-gradient-descent-manually-6d9bee09aa0b
 
 clc;
@@ -15,25 +14,29 @@ loss_batch_history=[];
 global mtrain;
 global ptrain;
 global accelChoice;
+global accel;
 global k;
+global only_W;
 
 [m,p] = size(Xts);
-batch_size= 256; % 11168 64 512 32
-splitChoice='random';
-splitValue=0.8;
-accelChoice='normal'; %  normal  heavyball,  nesterov
+batch_size= 512; % 11307 64 512 32 128 256
+splitChoice='all';  % all , random 
+splitValue=0.81;
+accelChoice='normal'; %  normal , heavyball,                  nesterov pas implémenté
 accel=accelChoice;
-initializationChoice = 'zeros'; % random, he, zeros, xavier or number
+only_W = 0; % 1, onlyW,  0, on train W et B 
+initializationChoice = 'zeros'; % random, he, zeros, xavier or int : tous les W sont initialisés à initializationChoice
 activation='sigmoid'; % 'relu' ou 'softmax' 'sigmoid'
-abs_tol=10^-8;
-rel_tol=10^-6;
-epoch_number=100;
-patience=3;
+abs_tol=10^-8; % tol absolue sur la validation d'une epoch a l'autre pour l early stopper
+rel_tol=10^-6; % tol relative sur la validation d'une epoch a l'autre pour l early stopper
+epoch_number=1000; % nbre d epoch max si earlys topper s enclenche pas
+epoch_number_on_all=10; % epoch pour train sur tout, ou on a pas de valdiation set et donc pas d'early stopper
+patience=5; % nombre d epoch de patience pour early stopper 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% initialization %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 W = initializationFunction(m,initializationChoice); 
-Winit=W; % store initial weights
+Winit = W; % store initial weights
 
 % a priori random le mieux
 % https://medium.com/@sakeshpusuluri123/activation-functions-and-weight-initialization-in-deep-learning-ebc326e62a5c
@@ -48,17 +51,41 @@ y_encoded = (yts==1:20); % one hot encoding des labels
 [Xtrain,Ytrain, Xtest, Ytest] = createTrainingSet(Xts,yts, splitChoice, splitValue);
 [mtrain,ptrain] = size(Xtrain);
 ytrain_encoded = (Ytrain==1:20);
-ytest_encoded = (Ytest==1:20);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% back propagation %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[W_trained, B_trained, train_loss_history, val_loss_history]= training(W, B, Xtrain, ytrain_encoded, Xtest, ytest_encoded, epoch_number, activation, abs_tol, rel_tol,patience, batch_size);
-%[W_trained, B_trained, train_loss_history]= trainingAll(W, B, Xtrain, ytrain_encoded, epoch_number, activation, abs_tol, rel_tol,patience, batch_size);
-
+if not(isequal(splitChoice,'all'))
+    ytest_encoded = (Ytest==1:20);
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Training %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if isequal(splitChoice,'all')
+    [W_trained, B_trained, train_loss_history]= trainingAll(W, B, Xtrain, ytrain_encoded, epoch_number_on_all, activation, abs_tol, rel_tol,patience, batch_size);
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% accuracy sur training test %%%%%%%%%%%
+    accuracy = validation( Xtrain,Ytrain, W_trained, B_trained );
+else
+    [W_trained, B_trained, train_loss_history, val_loss_history,epoch]= training(W, B, Xtrain, ytrain_encoded, Xtest, ytest_encoded, epoch_number, activation, abs_tol, rel_tol,patience, batch_size);
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Validation %%%%%%%%%%%
+    %accuracy = validation( Xts, yts, W_trained );
+    accuracy = validation( Xtest, Ytest, W_trained, B_trained );
+end
 training_time = toc
-%accuracy = validation( Xts, yts, W_trained );
-%accuracy = validation( Xtrain,Ytrain, W_trained );
-accuracy = validation( Xtest, Ytest, W_trained, B_trained );
 
 
 
-createFile( Xvr, W_trained, B_trained )
+
+%%%%%%%%%%%%%%plot des courbes de trainign et validation %%%%%%%%%%%%%
+f1 = figure;
+figure(f1);
+plot(train_loss_history, 'b');
+hold on;
+plot(val_loss_history, 'r');
+title('loss par epoch')
+legend('train','val')
+hold off;
+f2 = figure;
+figure(f2);
+plot(loss_batch_history, 'b');
+title('train loss par batch')
+hold off;
+saveas(f1,'results/bestf1.png')
+saveas(f2,'results/bestf2.png')
+
+createFile( Xvr, W_trained, B_trained ) % create submissions File for Kaggle
 
